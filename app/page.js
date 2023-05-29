@@ -1,18 +1,25 @@
-"use client";
-import { cardApiData } from "./services/cardApiData";
-import Header from "@/components/Header";
-import Jobscard from "@/components/Jobscard";
+"use client"
+import { useState } from "react";
+import { fetchCardData } from "./services/fetchCardData";
+import Jobscard from "@/app/components/Jobscard";
 
 export default function Home() {
-  const data = cardApiData();
+  const [data, setData] = useState(null);
+  
+  const fetchData = async () => {
+    const responseData = await fetchCardData();
+    setData(responseData);
+  };
+
+  if (!data) {
+    fetchData();
+  }
   return (
     <div className="container max-w-none">
-      <Header />
       <div className="container mx-auto px-8 py-10">
-        <div className="grid grid-cols-4 gap-4">
-          {data &&
-            data.map((value, index) => <Jobscard key={index} data={value} />)}
-        </div>
+          {data !== null &&
+           <Jobscard data={data} />
+          }
       </div>
     </div>
   );
